@@ -119,7 +119,7 @@ export default class NewList extends Component {
     listFun(rowData) {
         return (
             <TouchableHighlight
-                onPress={this.goToUrl.bind(this, "ChatBox", { name: rowData.name, avatar: rowData.images })}
+                onPress={this.goToUrl.bind(this, "ChatBox", { name: rowData.name, avatar: rowData.images,firstChat:rowData.firstChat })}
             >
                 <View style={styles.chatItem}>
                     <View style={styles.chatItemImage}>

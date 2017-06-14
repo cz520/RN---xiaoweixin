@@ -31,7 +31,7 @@ export default class ChatBox extends Component {
             messages: [
                 {
                     _id: 1,
-                    text: `你好，我是${this.props.navigation.state.params.name}`,
+                    text: this.props.navigation.state.params.firstChat,
                     createdAt: new Date(),
                     user: this.state.user,
                     imageUrl:this.props.navigation.state.params.avatar
