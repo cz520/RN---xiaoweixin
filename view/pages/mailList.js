@@ -4,7 +4,8 @@ import {
     View,
     Text,
     Image,
-    ListView
+    ListView,
+    TouchableHighlight
 } from "react-native";
 
 import styles from "./style"
@@ -80,25 +81,44 @@ export default class MailList extends Component {
         });
         this.state = {
             dataSource: ds.cloneWithRowsAndSections(data),
+            click: true
         };
     }
-
+    goto(props) {
+        if (this.state.click) {
+            this.setState({
+                click: false
+            })
+            const { navigate } = this.props.navigation;
+            navigate(props.url, props.user);
+            setTimeout(() => {
+                this.setState({
+                    click: true
+                })
+            }, 2000);
+        }
+    }
     renderHead(rowData) {
         return (
-            <View style={styles.chatItem}>
-                <Image
-                    source={rowData.image}
-                    style={{ width: 30, height: 30,margin: 8  }}
-                />
-                <Text>
-                    {rowData.name}
-                </Text>
-            </View>
+            <TouchableHighlight
+                onPress={this.goto.bind(this, { url: "DetailInfo", user: { name: rowData.name, username: "xiaoweiwei", subName: "", image: rowData.image } })}
+            >
+                <View style={styles.chatItem}>
+                    <Image
+                        source={rowData.image}
+                        style={{ width: 45, height: 45, margin: 8 }}
+                    />
+                    <Text>
+                        {rowData.name}
+                    </Text>
+
+                </View>
+            </TouchableHighlight>
         )
     }
     renderSectionH(sectionData, sectionID) {
         return (
-            <View style={{ backgroundColor: "#f1f1f1", height: 30,justifyContent:"center" }}>
+            <View style={{ backgroundColor: "#f1f1f1", height: 30, justifyContent: "center" }}>
                 <Text>{sectionID}</Text>
             </View>
         )

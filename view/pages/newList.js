@@ -99,22 +99,33 @@ export default class NewList extends Component {
         var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
         this.state = {
             dataSource: ds.cloneWithRows(newListData),
+            click: true
         }
     }
     goToUrl(url, params) {
-        const { navigate } = this.props.navigation;
-        navigate(url, params);
+        if (this.state.click) {
+            this.setState({
+                click: false
+            })
+            const { navigate } = this.props.navigation;
+            navigate(url, params);
+            setTimeout(() => {
+                this.setState({
+                    click: true
+                })
+            }, 2000);
+        }
     }
     listFun(rowData) {
         return (
             <TouchableHighlight
-                onPress={this.goToUrl.bind(this, "ChatBox", { name: rowData.name,avatar:rowData.images })}
+                onPress={this.goToUrl.bind(this, "ChatBox", { name: rowData.name, avatar: rowData.images })}
             >
                 <View style={styles.chatItem}>
                     <View style={styles.chatItemImage}>
                         <Image
                             source={rowData.images}
-                            style={{ width: 45, height: 45, margin: 8 }}
+                            style={{ width: 56, height: 56, margin: 8 }}
                         />
                     </View>
                     <View style={styles.chatContent}>
@@ -132,7 +143,6 @@ export default class NewList extends Component {
                     </View>
                 </View>
             </TouchableHighlight>
-
         )
     }
     render() {
@@ -142,7 +152,7 @@ export default class NewList extends Component {
                 <ListView
                     dataSource={this.state.dataSource}
                     renderRow={this.listFun.bind(this)}
-                    fadingEdge = "#000"
+                    fadingEdge="#000"
                 />
             </View>
         );

@@ -9,7 +9,8 @@ import {
     StyleSheet,
     Button
 } from "react-native";
-import { GiftedChat, Actions, Bubble, Send, Composer ,Avatar ,MessageText ,Time} from 'react-native-gifted-chat';
+import { GiftedChat, Bubble, Send, Composer, Avatar, MessageText, Time, MessageContainer } from 'react-native-gifted-chat';
+import ListHead from "../../component/listHead"
 
 export default class ChatBox extends Component {
     constructor(props) {
@@ -19,7 +20,8 @@ export default class ChatBox extends Component {
             user: {
                 _id: 1,
                 name: this.props.navigation.state.params.name,
-                avatar:() => <Image source={this.props.navigation.state.params.avatar} style = {{width:40,height:40}}/>,
+                avatar: () => <Image source={this.props.navigation.state.params.avatar} style={{ width: 40, height: 40 }} />,
+                imageUrl:this.props.navigation.state.params.avatar,
             }
         };
         this.onSend = this.onSend.bind(this);
@@ -27,20 +29,19 @@ export default class ChatBox extends Component {
     componentWillMount() {
         this.setState({
             messages: [
-                {   
+                {
                     _id: 1,
                     text: `你好，我是${this.props.navigation.state.params.name}`,
                     createdAt: new Date(),
                     user: this.state.user,
-                }, 
+                    imageUrl:this.props.navigation.state.params.avatar
+                },
             ],
         });
     }
-    getMessages (previousState,messages=[]){
-        return ;
-    }
+    
     onSend(messages = []) {
-        if (messages[0].text != ""){
+        if (messages[0].text != "") {
             this.setState((previousState) => {
                 //自己发送消息
                 const newMe = GiftedChat.append(previousState.messages, messages);
@@ -48,7 +49,7 @@ export default class ChatBox extends Component {
                 const _id = newMe[0]._id + 1;
                 const text = newMe[0].text
                 const newMess = {
-                     _id: _id,
+                    _id: _id,
                     text: text,
                     createdAt: new Date(),
                     user: this.state.user,
@@ -59,25 +60,36 @@ export default class ChatBox extends Component {
             });
         }
     }
+    goto(props) {
+        
+        const { navigate } = this.props.navigation;
+        const user = props.user;
+        navigate("DetailInfo", { name: user.name, username: "xiaoweiwei", subName: "", image: user.imageUrl });
+    }
+    
     render() {
         return (
-            <GiftedChat
-                messages={this.state.messages}
-                onSend={this.onSend}
-                locale="zh-cn"
-                renderSend={(pro) => <Send {...pro} label="发送" />}
-                user={{
-                    _id:2,
-                    name: "自己",
-                    avatar: () => <Image source={require("../../../images/touxiang.jpg")}  style = {{width:40,height:40}}/>,
-                }}
-                renderAvatarOnTop = {true}
-                renderComposer = {(props)=><Composer {...props} placeholder="请输入消息"></Composer>}
-                renderAvatar  = { (avatarProps)=>  <Avatar {...avatarProps}/>}
-                renderBubble = {(props) => <Bubble {...props} wrapperStyle={{right:{backgroundColor:"#16ac07"}}} />}
-                renderMessageText = {(props) => <MessageText {...props} textStyle={{right:{color:"#000"}}} />}
-                renderTime = {(props) => <Time {...props} textStyle={{right:{color:"#ccc"}}} />}
-            />
+            <View style={{ flex: 1 }}>
+                <ListHead headName={this.props.navigation.state.params.name} navigation={this.props.navigation} />
+                <GiftedChat
+                    messages={this.state.messages}
+                    onSend={this.onSend}
+                    locale="zh-cn"
+                    renderSend={(pro) => <Send {...pro} label="发送" />}
+                    user={{
+                        _id: 2,
+                        name: "自己",
+                        avatar: () => <Image source={require("../../../images/touxiang.jpg")} style={{ width: 40, height: 40 }} />,
+                        imageUrl:require("../../../images/touxiang.jpg")
+                    }}
+                    renderAvatarOnTop={true}
+                    renderComposer={(props) => <Composer {...props} placeholder="请输入消息"></Composer>}
+                    renderBubble={(props) => <Bubble {...props} wrapperStyle={{ right: { backgroundColor: "#16ac07" } }} />}
+                    renderMessageText={(props) => <MessageText {...props} textStyle={{ right: { color: "#000" } }} />}
+                    renderTime={(props) => <Time {...props} textStyle={{ right: { color: "#ccc" } }} />}
+                    onPressAvatar={this.goto.bind(this)}
+                />
+            </View>
         );
     }
 }

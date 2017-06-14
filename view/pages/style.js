@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
         color:"#fff"
     },
     chatItem: {
-        height: 61,
+        height: 72,
         flexDirection: "row",
         alignItems: "center",
         borderBottomWidth:0.5,
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
         backgroundColor:"#fff"
     },
     chatItemImage: {
-        width: 61,
+        width: 72,
     },
     chatContent:{
         flex:1,
